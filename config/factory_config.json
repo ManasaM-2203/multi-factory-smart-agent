@@ -1,0 +1,61 @@
+{
+  "factory_name": "Antigravity Smart Factory #01",
+  "heartbeat_interval_seconds": 3.0,
+  "heartbeat_timeout_seconds": 9.0,
+  "lines": [
+    {
+      "id": "LINE_01",
+      "name": "Assembly Line 1 (High-Speed)",
+      "status": "RUNNING",
+      "active_batch": "BATCH_101",
+      "defect_rate_percent": 0.5,
+      "vibration_mm_s": 2.1,
+      "temperature_c": 58.5
+    },
+    {
+      "id": "LINE_02",
+      "name": "Assembly Line 2 (Flexible Batch)",
+      "status": "IDLE",
+      "active_batch": null,
+      "defect_rate_percent": 0.2,
+      "vibration_mm_s": 1.4,
+      "temperature_c": 45.0
+    }
+  ],
+  "machines": [
+    {
+      "id": "MCH_01",
+      "line_id": "LINE_01",
+      "type": "CNC Mill",
+      "health_score": 92.5,
+      "maintenance_due": false
+    },
+    {
+      "id": "MCH_02",
+      "line_id": "LINE_01",
+      "type": "Robotic Arm Spindle",
+      "health_score": 68.0,
+      "maintenance_due": true
+    },
+    {
+      "id": "MCH_03",
+      "line_id": "LINE_02",
+      "type": "Laser Welder",
+      "health_score": 98.0,
+      "maintenance_due": false
+    }
+  ],
+  "raw_materials": {
+    "STEEL_SHEETS": 1200,
+    "MICROCONTROLLERS": 4500,
+    "FASTENERS": 25000,
+    "SYNTHETIC_COOLANT_L": 850
+  },
+  "finished_goods": {
+    "BATCH_100": {
+      "units": 500,
+      "status": "READY_FOR_DISPATCH",
+      "quality_approved": true
+    }
+  }
+}

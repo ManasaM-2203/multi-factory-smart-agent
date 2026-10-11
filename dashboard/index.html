@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Factory Multi-Agent Control Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+  <div class="app-wrapper">
+    
+    <!-- Top Header -->
+    <header class="header card">
+      <div class="brand">
+        <div class="logo-icon">🏭</div>
+        <div>
+          <h1>Smart Factory Autonomous Multi-Agent System</h1>
+          <p class="subtitle">Real-time Pub/Sub Messaging • Contract-Net Bidding • Human Oversight</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div id="system-status-badge" class="badge badge-success">
+          <span class="status-dot green"></span> System Nominal
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+
+      <!-- Pending Human-in-the-Loop Decisions Alert Banner -->
+      <section id="hitl-banner" class="hitl-banner hidden">
+        <div class="hitl-content">
+          <div class="hitl-text">
+            <h3 id="hitl-title">⚠️ Human Oversight Required</h3>
+            <p id="hitl-desc">Defect rate spike detected on Line 1. Approve line halt?</p>
+          </div>
+          <div class="hitl-actions">
+            <button class="btn btn-success" onclick="respondHITL('APPROVE')">✅ Approve</button>
+            <button class="btn btn-danger" onclick="respondHITL('REJECT')">❌ Reject</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 1: Scenario Buttons -->
+      <section class="section-block">
+        <div class="section-header">
+          <h2>⚡ 1. Run Demo Scenario</h2>
+          <span class="hint">Click to trigger autonomous conflict resolution & agent interaction</span>
+        </div>
+        <div class="scenario-grid">
+          <button class="scenario-card" onclick="runScenario(1)">
+            <div class="scenario-icon">▶️</div>
+            <div class="scenario-text">
+              <span class="scenario-title">Scenario 1: Normal Operation</span>
+              <span class="scenario-sub">Batch run & material stock RPC query</span>
+            </div>
+          </button>
+
+          <button class="scenario-card warning" onclick="runScenario(2)">
+            <div class="scenario-icon">⚔️</div>
+            <div class="scenario-text">
+              <span class="scenario-title">Scenario 2: Resource Conflict</span>
+              <span class="scenario-sub">PPA vs MA line access bidding</span>
+            </div>
+          </button>
+
+          <button class="scenario-card danger" onclick="runScenario(3)">
+            <div class="scenario-icon">🚨</div>
+            <div class="scenario-text">
+              <span class="scenario-title">Scenario 3: Defect Spike</span>
+              <span class="scenario-sub">Defect surge & Human approval trigger</span>
+            </div>
+          </button>
+
+          <button class="scenario-card info" onclick="runScenario(4)">
+            <div class="scenario-icon">💥</div>
+            <div class="scenario-text">
+              <span class="scenario-title">Scenario 4: Agent Crash</span>
+              <span class="scenario-sub">Process kill & automated recovery</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- SECTION 2: Domain Agents & Coordinator -->
+      <section class="section-block">
+        <div class="section-header">
+          <h2>🤖 2. Domain Agents & Coordinator</h2>
+          <span class="hint">Real-time health, status & current task telemetry</span>
+        </div>
+        <div id="agents-grid" class="agents-grid">
+          <!-- Dynamically rendered agent cards -->
+        </div>
+      </section>
+
+      <!-- SECTION 3: Latest Decision (Hero Card) -->
+      <section class="section-block">
+        <div class="section-header">
+          <h2>💡 3. Latest Decision</h2>
+        </div>
+        <div class="card decision-hero-card">
+          <div class="hero-icon-wrapper">💡</div>
+          <div class="hero-text-wrapper">
+            <p id="latest-decision-text" class="decision-text">
+              System nominal. Select a scenario above to observe multi-agent decision making.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: Technical Details Accordion (Collapsed by default) -->
+      <section class="section-block tech-details-section">
+        <details id="tech-details-accordion" class="tech-accordion">
+          <summary class="tech-summary">
+            <span>▶ Show technical details</span>
+            <span class="tech-summary-sub">(Audit log, raw message bus stream & exports)</span>
+          </summary>
+          <div class="tech-content">
+            
+            <div class="tech-actions-bar">
+              <span class="tech-label">Audit Log Exports:</span>
+              <button id="export-csv-btn" class="btn btn-secondary btn-sm">📥 Export CSV</button>
+              <button id="export-json-btn" class="btn btn-secondary btn-sm">📄 Export JSON</button>
+            </div>
+
+            <!-- 2-Column Audit History Table -->
+            <div class="tech-card">
+              <h3>📜 Decision History</h3>
+              <div class="table-responsive">
+                <table class="audit-table">
+                  <thead>
+                    <tr>
+                      <th>What Happened</th>
+                      <th style="width: 160px; text-align: right;">Decision Type</th>
+                    </tr>
+                  </thead>
+                  <tbody id="audit-table-body">
+                    <tr>
+                      <td colspan="2" class="placeholder-text">Loading history...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Message Bus Feed -->
+            <div class="tech-card">
+              <h3>💬 Live Message Bus Stream</h3>
+              <div id="message-feed" class="message-feed">
+                <!-- Log items stream here -->
+              </div>
+            </div>
+
+          </div>
+        </details>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Multi-Agent Smart Factory System • Built with Python FastAPI & Asyncio Pub/Sub Broker</p>
+    </footer>
+  </div>
+
+  <script src="app.js?v=3"></script>
+</body>
+</html>

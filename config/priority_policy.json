@@ -1,0 +1,66 @@
+{
+  "policy_version": "1.0.0",
+  "updated_at": "2026-09-02T12:00:00Z",
+  "priority_levels": {
+    "CRITICAL": 1,
+    "HIGH": 2,
+    "MEDIUM": 3,
+    "LOW": 4
+  },
+  "rules": [
+    {
+      "id": "RULE_SAFETY_QUALITY_OVERRIDE",
+      "name": "Safety & Quality Hold Precedence",
+      "priority_level": "CRITICAL",
+      "priority_score": 100,
+      "source_agent": "QCA",
+      "target_event": "QUALITY_HALT",
+      "action": "HALT_LINE",
+      "description": "Quality Control defect threshold breaches take immediate precedence over production & logistics schedules.",
+      "requires_human_approval": true
+    },
+    {
+      "id": "RULE_EMERGENCY_MAINTENANCE",
+      "name": "Emergency Maintenance Line Lockout",
+      "priority_level": "HIGH",
+      "priority_score": 80,
+      "source_agent": "MA",
+      "target_event": "MAINTENANCE_REQUIRED",
+      "action": "SCHEDULE_MAINTENANCE",
+      "description": "Critical bearing vibration or overheating takes precedence over production output targets to prevent catastrophic breakdown.",
+      "requires_human_approval": false
+    },
+    {
+      "id": "RULE_PRODUCTION_SCHEDULE",
+      "name": "Production Batch Target",
+      "priority_level": "MEDIUM",
+      "priority_score": 60,
+      "source_agent": "PPA",
+      "target_event": "PRODUCTION_REQUEST",
+      "action": "RUN_PRODUCTION",
+      "description": "Standard batch scheduling runs when machine health is green and quality variance is acceptable.",
+      "requires_human_approval": false
+    },
+    {
+      "id": "RULE_LOGISTICS_OPTIMIZATION",
+      "name": "Logistics Dispatch Alignment",
+      "priority_level": "LOW",
+      "priority_score": 40,
+      "source_agent": "LA",
+      "target_event": "LOGISTICS_DISPATCH",
+      "action": "DISPATCH_TRUCK",
+      "description": "Logistics dispatch operates based on confirmed finished goods inventory and available docks.",
+      "requires_human_approval": false
+    }
+  ],
+  "human_in_the_loop": {
+    "enabled": true,
+    "mandatory_approval_events": [
+      "QUALITY_HALT",
+      "EMERGENCY_SHUTDOWN",
+      "MANUAL_AGENT_OVERRIDE"
+    ],
+    "auto_timeout_seconds": 60,
+    "default_timeout_action": "REJECT"
+  }
+}

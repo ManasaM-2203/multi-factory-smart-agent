@@ -1,0 +1,50 @@
+graph TD
+    subgraph UI ["Human Oversight & Presentation Layer"]
+        Dashboard["Live Web Dashboard (HTML5 / JS / WebSockets)"]
+        HITLPanel["Human Override Action Center"]
+        AuditExporter["Audit Trail Exporter (CSV/JSON)"]
+    end
+
+    subgraph API ["API & Realtime Layer (FastAPI)"]
+        REST["REST API Endpoints (/api/status, /api/hitl, /api/audit)"]
+        WS["WebSocket Event Streamer (/ws)"]
+    end
+
+    subgraph Core ["Coordinator & Logic Layer"]
+        Coordinator["Coordinator / Orchestrator Agent"]
+        PriorityEngine["Priority Engine (config/priority_policy.json)"]
+        CNPEngine["Contract-Net Protocol (CNP) Bidding Engine"]
+        HealthMonitor["Heartbeat & Failure Recovery Manager"]
+    end
+
+    subgraph Bus ["Messaging & Storage Layer"]
+        Broker["Asyncio Pub/Sub Message Bus (broker/message_bus.py)"]
+        DB[("SQLite Factory State & Audit Store (db/factory_state.db)")]
+    end
+
+    subgraph DomainAgents ["Autonomous Domain Agents"]
+        PPA["Production Planning Agent (PPA)"]
+        QCA["Quality Control Agent (QCA)"]
+        MA["Maintenance Agent (MA)"]
+        LA["Logistics Agent (LA)"]
+    end
+
+    Dashboard <--> REST
+    Dashboard <--> WS
+    HITLPanel <--> REST
+    
+    REST <--> Coordinator
+    WS <--> Broker
+
+    PPA <--> Broker
+    QCA <--> Broker
+    MA <--> Broker
+    LA <--> Broker
+    Coordinator <--> Broker
+
+    Coordinator --> PriorityEngine
+    Coordinator --> CNPEngine
+    Coordinator --> HealthMonitor
+    
+    Broker --> DB
+    Coordinator --> DB
